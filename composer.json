@@ -3,12 +3,12 @@
   "type": "library",
   "description": "Redsys gateway for the Omnipay payment processing library",
   "keywords": [
-      "redsys",
-      "gateway",
-      "merchant",
-      "omnipay",
-      "pay",
-      "payment"
+    "redsys",
+    "gateway",
+    "merchant",
+    "omnipay",
+    "pay",
+    "payment"
   ],
   "homepage": "https://github.com/neverbot/omnipay-redsys",
   "license": "MIT",
@@ -25,17 +25,17 @@
     }    
   ],
   "autoload": {
-      "psr-4": { "Omnipay\\Redsys\\" : "src/" }
+    "psr-4": { "Omnipay\\Redsys\\" : "src/" }
   },
   "require": {
-      "omnipay/common": "~2.0"
+    "omnipay/common": "~2.0"
   },
   "require-dev": {
-      "omnipay/tests": "~2.0"
+    "omnipay/tests": "~2.0"
   },
   "extra": {
-      "branch-alias": {
-          "dev-master": "2.0.x-dev"
-      }
+    "branch-alias": {
+      "dev-master": "2.0.x-dev"
+    }
   }
 }
