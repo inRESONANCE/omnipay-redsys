@@ -25,8 +25,10 @@ to your `composer.json` file:
 
 And run composer to update your dependencies:
 
-    $ curl -s http://getcomposer.org/installer | php
-    $ php composer.phar update
+```bash
+$ curl -s http://getcomposer.org/installer | php
+$ php composer.phar update
+```
 
 ## Basic Usage
 
