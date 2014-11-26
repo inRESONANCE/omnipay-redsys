@@ -1,35 +1,41 @@
 {
-    "name": "tsolucio/omnipay-redsys",
-    "type": "library",
-    "description": "Redsys gateway for the Omnipay payment processing library",
-    "keywords": [
-        "redsys",
-        "gateway",
-        "merchant",
-        "omnipay",
-        "pay",
-        "payment"
-    ],
-    "homepage": "https://github.com/tsolucio/omnipay-redsys",
-    "license": "MIT",
-    "authors": [
-        {
-            "name": "Bernat Arlandis",
-            "email": "bernat@tsolucio.com"
-        }
-    ],
-    "autoload": {
-        "psr-4": { "Omnipay\\Redsys\\" : "src/" }
+  "name": "tsolucio/omnipay-redsys",
+  "type": "library",
+  "description": "Redsys gateway for the Omnipay payment processing library",
+  "keywords": [
+      "redsys",
+      "gateway",
+      "merchant",
+      "omnipay",
+      "pay",
+      "payment"
+  ],
+  "homepage": "https://github.com/neverbot/omnipay-redsys",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Bernat Arlandis",
+      "email": "bernat@tsolucio.com",
+      "role": "Main Developer"
     },
-    "require": {
-        "omnipay/common": "~2.0"
-    },
-    "require-dev": {
-        "omnipay/tests": "~2.0"
-    },
-    "extra": {
-        "branch-alias": {
-            "dev-master": "2.0.x-dev"
-        }
-    }
+    {
+      "name": "Ivan Alonso (neverbot)",
+      "email": "ivan@billionlabs.com",
+      "role": "Developer"
+    }    
+  ],
+  "autoload": {
+      "psr-4": { "Omnipay\\Redsys\\" : "src/" }
+  },
+  "require": {
+      "omnipay/common": "~2.0"
+  },
+  "require-dev": {
+      "omnipay/tests": "~2.0"
+  },
+  "extra": {
+      "branch-alias": {
+          "dev-master": "2.0.x-dev"
+      }
+  }
 }

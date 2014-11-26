@@ -12,13 +12,13 @@ to your `composer.json` file:
 ```json
 {
     "repositories": [
-    {
-      "type": "vcs",
-      "url": "https://github.com/tsolucio/omnipay-redsys"
-    }
-  ],
+      {
+        "type": "vcs",
+        "url": "https://github.com/neverbot/omnipay-redsys"
+      }
+    ],
     "require": {
-        "tsolucio/omnipay-redsys": "~2.0"
+        "neverbot/omnipay-redsys": "~2.0"
     }
 }
 ```
