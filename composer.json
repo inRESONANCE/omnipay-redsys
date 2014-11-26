@@ -1,5 +1,5 @@
 {
-  "name": "tsolucio/omnipay-redsys",
+  "name": "neverbot/omnipay-redsys",
   "type": "library",
   "description": "Redsys gateway for the Omnipay payment processing library",
   "keywords": [
