@@ -33,6 +33,6 @@ class PurchaseResponse extends AbstractResponse implements RedirectResponseInter
     }
 
     public function redirect() {
-      parent::redirect();
+        parent::redirect();
     }
 }
