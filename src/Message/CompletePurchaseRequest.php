@@ -40,6 +40,8 @@ class CompletePurchaseRequest extends PurchaseRequest
         $parameters = $query->get('Ds_MerchantParameters');
         $parameters = base64_decode(strtr($parameters, '-_', '+/'));
 
+        Log::info($parameters);
+
         $data = array();
 
         foreach (array('Ds_Date', 
