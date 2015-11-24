@@ -46,20 +46,18 @@ class CompletePurchaseRequest extends PurchaseRequest
 
         foreach (array('Ds_Date', 
                        'Ds_Hour', 
+                       'Ds_SecurePayment', 
+                       'Ds_Card_Country', 
                        'Ds_Amount', 
                        'Ds_Currency', 
                        'Ds_Order', 
                        'Ds_MerchantCode', 
                        'Ds_Terminal', 
-                       'Ds_Signature', 
                        'Ds_Response', 
-                       'Ds_TransactionType', 
-                       'Ds_SecurePayment', 
                        'Ds_MerchantData', 
-                       'Ds_Card_Country', 
-                       'Ds_AuthorisationCode', 
+                       'Ds_TransactionType', 
                        'Ds_ConsumerLanguage', 
-                       'Ds_Card_Type') as $field) 
+                       'Ds_AuthorisationCode') as $field) 
         {
             $data[$field] = $parameters[$field];
         }
