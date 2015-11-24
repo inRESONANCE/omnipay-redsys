@@ -24,14 +24,14 @@ class CompletePurchaseResponse extends AbstractResponse
         return false;
     }
 
-    public function getTransactionReference() 
-    {
-        return $this->data['Ds_AuthorisationCode'];
-    }
+    // public function getTransactionReference() 
+    // {
+    //     return $this->data['Ds_AuthorisationCode'];
+    // }
 
-    public function getExtraData() 
-    {
-        return $this->data['Ds_MerchantData'];
-    }
+    // public function getExtraData() 
+    // {
+    //     return $this->data['Ds_MerchantData'];
+    // }
 
 }

@@ -37,11 +37,29 @@ class CompletePurchaseRequest extends PurchaseRequest
     {
         $query = $this->httpRequest->request;
 
+        $parameters = $query->get('Ds_MerchantParameters');
+        $parameters = base64_decode(strtr($parameters, '-_', '+/'));
+
         $data = array();
 
-        foreach (array( 'Ds_SignatureVersion', 'Ds_Signature', 'Ds_MerchantParameters' ) as $field) 
+        foreach (array('Ds_Date', 
+                       'Ds_Hour', 
+                       'Ds_Amount', 
+                       'Ds_Currency', 
+                       'Ds_Order', 
+                       'Ds_MerchantCode', 
+                       'Ds_Terminal', 
+                       'Ds_Signature', 
+                       'Ds_Response', 
+                       'Ds_TransactionType', 
+                       'Ds_SecurePayment', 
+                       'Ds_MerchantData', 
+                       'Ds_Card_Country', 
+                       'Ds_AuthorisationCode', 
+                       'Ds_ConsumerLanguage', 
+                       'Ds_Card_Type') as $field) 
         {
-            $data[$field] = $query->get($field);
+            $data[$field] = $parameters[$field];
         }
 
         if (!$this->checkSignature($data)) 
