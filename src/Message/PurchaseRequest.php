@@ -92,24 +92,23 @@ class PurchaseRequest extends AbstractRequest
         return $this->setParameter('payMethods', $value);
     }
 
-    public function generateSignature($data) 
+    public function generateSignature($encodedJson) 
     {
-        $signature = '';
+        // decode the key
+        $key = base64_decode($this->getSecretKey());
 
-        foreach (array('Ds_Merchant_Amount', 
-                       'Ds_Merchant_Order', 
-                       'Ds_Merchant_MerchantCode', 
-                       'Ds_Merchant_Currency', 
-                       'Ds_Merchant_TransactionType', 
-                       'Ds_Merchant_MerchantURL') as $field) 
-        {
-            $signature .= $data[$field];
-        }
+        $key = $this->encrypt_3DES($this->getMerchantOrder(), $key);
 
-        $signature .= $this->getSecretKey();
-        $signature = sha1($signature);
+        // MAC256 
+        $res = hash_hmac('sha256', $encodedJson, $key, true); //(PHP 5 >= 5.1.2)
 
-        return $signature;
+        // encode base64
+        return base64_encode($res);
+    }
+
+    protected function getMerchantOrder()
+    {
+        return str_pad($this->getTransactionId(), 12, '0', STR_PAD_LEFT);
     }
 
     public function getData()
@@ -117,13 +116,12 @@ class PurchaseRequest extends AbstractRequest
         $this->validate('amount', 'currency', 'transactionId', 'merchantCode', 'terminal');
 
         $amount = str_replace('.', '', $this->getAmount());
-        $order = str_pad($this->getTransactionId(), 12, '0', STR_PAD_LEFT);
         $card = $this->getCard();
 
         $data = array(
             'Ds_Merchant_Amount' => $amount,
             'Ds_Merchant_Currency' => $this->getCurrencyNumeric(),
-            'Ds_Merchant_Order' => $order,
+            'Ds_Merchant_Order' => $this->getMerchantOrder(),
             'Ds_Merchant_ProductDescription' => $this->getDescription(),
             'Ds_Merchant_Titular' => $card->getName(),
             'Ds_Merchant_MerchantCode' => $this->getMerchantCode(),
@@ -142,10 +140,6 @@ class PurchaseRequest extends AbstractRequest
         {
             $data['Ds_Merchant_PayMethods'] = $this->getPayMethods();
         }
-
-        // $data['Ds_Merchant_MerchantSignature'] = $this->generateSignature($data);
-
-        // return $data;
 
         $json = json_encode($data);
 
@@ -168,6 +162,15 @@ class PurchaseRequest extends AbstractRequest
     public function getEndpoint()
     {
         return $this->getTestMode() ? $this->testEndpoint : $this->liveEndpoint;
+    }
+
+    protected function encrypt_3DES($message, $key)
+    {
+        $bytes = array(0,0,0,0,0,0,0,0);
+        $iv = implode(array_map("chr", $bytes)); // PHP 4 >= 4.0.2
+
+        $ciphertext = mcrypt_encrypt(MCRYPT_3DES, $key, $message, MCRYPT_MODE_CBC, $iv); // PHP 4 >= 4.0.2
+        return $ciphertext;
     }
 
 }
