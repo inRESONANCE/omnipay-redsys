@@ -9,16 +9,19 @@ use Omnipay\Common\Exception\InvalidResponseException;
  */
 class CompletePurchaseRequest extends PurchaseRequest
 {
-
-    public function checkSignature($data) {
-        if (!isset($data['Ds_Signature'])) {
+    public function checkSignature($data) 
+    {
+        if (!isset($data['Ds_Signature'])) 
+        {
             return false;
         }
 
         $signature = '';
 
-        foreach (array('Ds_Amount', 'Ds_Order', 'Ds_MerchantCode', 'Ds_Currency', 'Ds_Response') as $field) {
-            if (isset($data[$field])) {
+        foreach (array('Ds_Amount', 'Ds_Order', 'Ds_MerchantCode', 'Ds_Currency', 'Ds_Response') as $field) 
+        {
+            if (isset($data[$field])) 
+            {
                 $signature .= $data[$field];
             }
         }
@@ -34,11 +37,13 @@ class CompletePurchaseRequest extends PurchaseRequest
 
         $data = array();
 
-        foreach (array('Ds_Date', 'Ds_Hour', 'Ds_Amount', 'Ds_Currency', 'Ds_Order', 'Ds_MerchantCode', 'Ds_Terminal', 'Ds_Signature', 'Ds_Response', 'Ds_TransactionType', 'Ds_SecurePayment', 'Ds_MerchantData', 'Ds_Card_Country', 'Ds_AuthorisationCode', 'Ds_ConsumerLanguage', 'Ds_Card_Type') as $field) {
+        foreach (array('Ds_Date', 'Ds_Hour', 'Ds_Amount', 'Ds_Currency', 'Ds_Order', 'Ds_MerchantCode', 'Ds_Terminal', 'Ds_Signature', 'Ds_Response', 'Ds_TransactionType', 'Ds_SecurePayment', 'Ds_MerchantData', 'Ds_Card_Country', 'Ds_AuthorisationCode', 'Ds_ConsumerLanguage', 'Ds_Card_Type') as $field) 
+        {
             $data[$field] = $query->get($field);
         }
 
-        if (!$this->checkSignature($data)) {
+        if (!$this->checkSignature($data)) 
+        {
             throw new InvalidResponseException('Invalid signature, Order:' . $data['Ds_Order'] . ', Authorisation Code: ' . $data['Ds_AuthorisationCode']);
         }
 

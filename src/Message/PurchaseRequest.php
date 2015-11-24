@@ -10,7 +10,6 @@ use Omnipay\Common\Message\AbstractRequest;
 class PurchaseRequest extends AbstractRequest
 {
     protected $liveEndpoint = 'https://sis.redsys.es/sis/realizarPago';
-
     protected $testEndpoint = 'https://sis-t.redsys.es:25443/sis/realizarPago';
 
     public function getMerchantCode()
@@ -93,12 +92,20 @@ class PurchaseRequest extends AbstractRequest
         return $this->setParameter('payMethods', $value);
     }
 
-    public function generateSignature($data) {
+    public function generateSignature($data) 
+    {
         $signature = '';
 
-        foreach (array('Ds_Merchant_Amount', 'Ds_Merchant_Order', 'Ds_Merchant_MerchantCode', 'Ds_Merchant_Currency', 'Ds_Merchant_TransactionType', 'Ds_Merchant_MerchantURL') as $field) {
+        foreach (array('Ds_Merchant_Amount', 
+                       'Ds_Merchant_Order', 
+                       'Ds_Merchant_MerchantCode', 
+                       'Ds_Merchant_Currency', 
+                       'Ds_Merchant_TransactionType', 
+                       'Ds_Merchant_MerchantURL') as $field) 
+        {
             $signature .= $data[$field];
         }
+
         $signature .= $this->getSecretKey();
         $signature = sha1($signature);
 
@@ -131,11 +138,24 @@ class PurchaseRequest extends AbstractRequest
             'Ds_Merchant_AuthorisationCode' => $this->getAuthorisationCode(),
         );
 
-        if ($this->getPayMethods()) {
+        if ($this->getPayMethods()) 
+        {
             $data['Ds_Merchant_PayMethods'] = $this->getPayMethods();
         }
 
-        $data['Ds_Merchant_MerchantSignature'] = $this->generateSignature($data);
+        // $data['Ds_Merchant_MerchantSignature'] = $this->generateSignature($data);
+
+        // return $data;
+
+        $json = json_encode($data);
+
+        $json = base64_encode($json);
+
+        $data = array(
+            'Ds_SignatureVersion' => 'HMAC_SHA256_V1',
+            'Ds_MerchantParameters' => $json,
+            'Ds_Signature' => $this->generateSignature($json)
+        );
 
         return $data;
     }
