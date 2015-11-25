@@ -20,12 +20,15 @@ class CompletePurchaseRequest extends PurchaseRequest
 
     public function checkSignature($data, $signature) 
     {
+        $json = json_encode($data);
+        $json = base64_encode($json);
+
         // decode the key base64
         $key = base64_decode($this->getSecretKey());
         $key = $this->encrypt_3DES($data['Ds_Order'], $key);
 
         // MAC256 of the parameters
-        $res = hash_hmac('sha256', $data, $key, true); // (PHP 5 >= 5.1.2)
+        $res = hash_hmac('sha256', $json, $key, true); // (PHP 5 >= 5.1.2)
 
         // decode data base64
         $newSignature = strtr(base64_encode($res), '+/', '-_');
