@@ -20,19 +20,23 @@ class PurchaseResponse extends AbstractResponse implements RedirectResponseInter
         return true;
     }
 
-    public function getRedirectUrl() {
+    public function getRedirectUrl() 
+    {
         return $this->request->getEndpoint();
     }
 
-    public function getRedirectMethod() {
+    public function getRedirectMethod() 
+    {
         return 'POST';
     }
 
-    public function getRedirectData() {
+    public function getRedirectData() 
+    {
         return $this->getData();
     }
 
-    public function redirect() {
+    public function redirect() 
+    {
         parent::redirect();
     }
 }

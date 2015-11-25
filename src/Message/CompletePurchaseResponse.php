@@ -11,9 +11,11 @@ class CompletePurchaseResponse extends AbstractResponse
 {
     public function isSuccessful()
     {
-        if (isset($this->data['Ds_Response']) && $this->data['Ds_Response'] >= 0 && $this->data['Ds_Response'] < 100) {
+        if (isset($this->data['Ds_Response']) && $this->data['Ds_Response'] >= 0 && $this->data['Ds_Response'] < 100) 
+        {
             return true;
         }
+        
         return false;
     }
 
@@ -22,12 +24,14 @@ class CompletePurchaseResponse extends AbstractResponse
         return false;
     }
 
-    public function getTransactionReference() {
-        return $this->data['Ds_AuthorisationCode'];
-    }
+    // public function getTransactionReference() 
+    // {
+    //     return $this->data['Ds_AuthorisationCode'];
+    // }
 
-    public function getExtraData() {
-        return $this->data['Ds_MerchantData'];
-    }
+    // public function getExtraData() 
+    // {
+    //     return $this->data['Ds_MerchantData'];
+    // }
 
 }

@@ -22,6 +22,8 @@ class Gateway extends AbstractGateway
             'secretKey' => '',
             'terminal' => 1,
             'testMode' => false,
+            'language' => 1,
+            'merchantName' => 'Omnipay'
         );
     }
 
