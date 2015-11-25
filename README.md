@@ -4,6 +4,8 @@
 
 This package implements Redsys support for Omnipay.
 
+**Update (25-11-2015)**: Now working with the new HMAC SHA256 signature, mandatory with Redsys.
+
 ## Installation
 
 Omnipay is installed via [Composer](http://getcomposer.org/). To install, simply add it
