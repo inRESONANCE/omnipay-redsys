@@ -20,28 +20,17 @@ class CompletePurchaseRequest extends PurchaseRequest
 
     public function checkSignature($data, $signature) 
     {
-        $json = json_encode($data);
-        $json = base64_encode($json);
-
-        // Se decodifica la clave Base64
+        // decode the key base64
         $key = base64_decode($this->getSecretKey());
-
-        // Se diversifica la clave con el Número de Pedido
         $key = $this->encrypt_3DES($data['Ds_Order'], $key);
 
-        // MAC256 del parámetro Ds_Parameters que envía Redsys
-        $res = hash_hmac('sha256', $json, $key, true); // (PHP 5 >= 5.1.2)
+        // MAC256 of the parameters
+        $res = hash_hmac('sha256', $data, $key, true); // (PHP 5 >= 5.1.2)
 
-        // Se codifican los datos Base64
+        // decode data base64
         $newSignature = strtr(base64_encode($res), '+/', '-_');
 
-        \Log::info('secretKey: ' . $this->getSecretKey());
-        \Log::info('signature: ' . $signature);
-        \Log::info('newSignature: ' . $newSignature);
-
         return $signature == $newSignature;
-
-        // return true;
     }
 
     public function getData()
@@ -53,30 +42,6 @@ class CompletePurchaseRequest extends PurchaseRequest
         $parameters = $query->get('Ds_MerchantParameters');
         $parameters = base64_decode(strtr($parameters, '-_', '+/'));
         $parameters = json_decode($parameters, true); // (PHP 5 >= 5.2.0)
-
-        // \Log::info($parameters);
-
-        /*
-        $data = array();
-
-        foreach (array('Ds_Date', 
-                       'Ds_Hour', 
-                       'Ds_SecurePayment', 
-                       'Ds_Card_Country', 
-                       'Ds_Amount', 
-                       'Ds_Currency', 
-                       'Ds_Order', 
-                       'Ds_MerchantCode', 
-                       'Ds_Terminal', 
-                       'Ds_Response', 
-                       'Ds_MerchantData', 
-                       'Ds_TransactionType', 
-                       'Ds_ConsumerLanguage', 
-                       'Ds_AuthorisationCode') as $field) 
-        {
-            $data[$field] = $parameters[$field];
-        }
-        */
 
         if (!$this->checkSignature($parameters, $signature)) 
         {
