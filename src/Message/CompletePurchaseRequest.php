@@ -9,40 +9,55 @@ use Omnipay\Common\Exception\InvalidResponseException;
  */
 class CompletePurchaseRequest extends PurchaseRequest
 {
-    public function checkSignature($data) 
+    protected function encrypt_3DES($message, $key)
     {
-        // if (!isset($data['Ds_Signature'])) 
-        // {
-        //     return false;
-        // }
+        $bytes = array(0,0,0,0,0,0,0,0);
+        $iv = implode(array_map("chr", $bytes)); // PHP 4 >= 4.0.2
 
-        // $signature = '';
+        $ciphertext = mcrypt_encrypt(MCRYPT_3DES, $key, $message, MCRYPT_MODE_CBC, $iv); // PHP 4 >= 4.0.2
+        return $ciphertext;
+    }
 
-        // foreach (array('Ds_Amount', 'Ds_Order', 'Ds_MerchantCode', 'Ds_Currency', 'Ds_Response') as $field) 
-        // {
-        //     if (isset($data[$field])) 
-        //     {
-        //         $signature .= $data[$field];
-        //     }
-        // }
-        // $signature .= $this->getSecretKey();
-        // $signature = sha1($signature);
+    public function checkSignature($data, $signature) 
+    {
+        // Se decodifica la clave Base64
+        $key = base64_decode($this->getSecretKey());
 
-        // return $signature == strtolower($data['Ds_Signature']);
+        // Se decodifican los datos Base64
+        $data = base64_decode(strtr($data, '-_', '+/'));
 
-        return true;
+        $data = json_decode($data, true); // (PHP 5 >= 5.2.0)
+
+        // Se diversifica la clave con el Número de Pedido
+        $key = $this->encrypt_3DES($data['Ds_Order'], $key);
+
+        // MAC256 del parámetro Ds_Parameters que envía Redsys
+        $res = hash_hmac('sha256', $data, $key, true); // (PHP 5 >= 5.1.2)
+
+        // Se codifican los datos Base64
+        $newSignature = strtr(base64_encode($res), '+/', '-_');
+
+        \Log::info('signature: ' . $signature);
+        \Log::info('newSignature: ' . $newSignature);
+
+        return $signature == $newSignature;
+
+        // return true;
     }
 
     public function getData()
     {
         $query = $this->httpRequest->request;
 
+        $signature = $query->get('Ds_Signature');
+
         $parameters = $query->get('Ds_MerchantParameters');
         $parameters = base64_decode(strtr($parameters, '-_', '+/'));
         $parameters = json_decode($parameters, true); // (PHP 5 >= 5.2.0)
 
-        \Log::info($parameters);
+        // \Log::info($parameters);
 
+        /*
         $data = array();
 
         foreach (array('Ds_Date', 
@@ -62,13 +77,14 @@ class CompletePurchaseRequest extends PurchaseRequest
         {
             $data[$field] = $parameters[$field];
         }
+        */
 
-        if (!$this->checkSignature($data)) 
+        if (!$this->checkSignature($parameters, $signature)) 
         {
-            throw new InvalidResponseException('Invalid signature: ' . $data['Ds_Signature']);
+            throw new InvalidResponseException('Invalid signature: ' . $signature);
         }
 
-        return $data;
+        return $parameters;
     }
 
     public function sendData($data)
