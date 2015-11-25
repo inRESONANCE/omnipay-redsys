@@ -39,6 +39,7 @@ class CompletePurchaseRequest extends PurchaseRequest
 
         $parameters = $query->get('Ds_MerchantParameters');
         $parameters = base64_decode(strtr($parameters, '-_', '+/'));
+        $parameters = json_decode($parameters, true); // (PHP 5 >= 5.2.0)
 
         \Log::info($parameters);
 
