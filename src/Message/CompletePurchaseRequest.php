@@ -23,10 +23,7 @@ class CompletePurchaseRequest extends PurchaseRequest
         // Se decodifica la clave Base64
         $key = base64_decode($this->getSecretKey());
 
-        // Se decodifican los datos Base64
-        $data = base64_decode(strtr($data, '-_', '+/'));
-
-        $data = json_decode($data, true); // (PHP 5 >= 5.2.0)
+        // $order = str_pad($this->getTransactionId(), 12, '0', STR_PAD_LEFT);
 
         // Se diversifica la clave con el Número de Pedido
         $key = $this->encrypt_3DES($data['Ds_Order'], $key);
@@ -37,6 +34,7 @@ class CompletePurchaseRequest extends PurchaseRequest
         // Se codifican los datos Base64
         $newSignature = strtr(base64_encode($res), '+/', '-_');
 
+        \Log::info('secretKey: ' . $this->getSecretKey());
         \Log::info('signature: ' . $signature);
         \Log::info('newSignature: ' . $newSignature);
 
