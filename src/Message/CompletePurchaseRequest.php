@@ -20,16 +20,17 @@ class CompletePurchaseRequest extends PurchaseRequest
 
     public function checkSignature($data, $signature) 
     {
+        $json = json_encode($data);
+        $json = base64_encode($json);
+
         // Se decodifica la clave Base64
         $key = base64_decode($this->getSecretKey());
-
-        // $order = str_pad($this->getTransactionId(), 12, '0', STR_PAD_LEFT);
 
         // Se diversifica la clave con el Número de Pedido
         $key = $this->encrypt_3DES($data['Ds_Order'], $key);
 
         // MAC256 del parámetro Ds_Parameters que envía Redsys
-        $res = hash_hmac('sha256', $data, $key, true); // (PHP 5 >= 5.1.2)
+        $res = hash_hmac('sha256', $json, $key, true); // (PHP 5 >= 5.1.2)
 
         // Se codifican los datos Base64
         $newSignature = strtr(base64_encode($res), '+/', '-_');
