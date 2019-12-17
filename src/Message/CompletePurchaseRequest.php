@@ -11,14 +11,13 @@ class CompletePurchaseRequest extends PurchaseRequest
 {
     protected function encrypt_3DES($message, $key)
     {
-        $bytes = array(0,0,0,0,0,0,0,0);
-        $iv = implode(array_map("chr", $bytes)); // PHP 4 >= 4.0.2
+        $l = ceil(strlen($message) / 8) * 8;
+        $ciphertext = substr(openssl_encrypt($message . str_repeat("\0", $l - strlen($message)), 'des-ede3-cbc', $key, OPENSSL_RAW_DATA, "\0\0\0\0\0\0\0\0"), 0, $l);
 
-        $ciphertext = mcrypt_encrypt(MCRYPT_3DES, $key, $message, MCRYPT_MODE_CBC, $iv); // PHP 4 >= 4.0.2
         return $ciphertext;
     }
 
-    public function checkSignature($data, $signature) 
+    public function checkSignature($data, $signature)
     {
         $json = json_encode($data);
         $json = base64_encode($json);
@@ -46,7 +45,7 @@ class CompletePurchaseRequest extends PurchaseRequest
         $parameters = base64_decode(strtr($parameters, '-_', '+/'));
         $parameters = json_decode($parameters, true); // (PHP 5 >= 5.2.0)
 
-        if (!$this->checkSignature($parameters, $signature)) 
+        if (!$this->checkSignature($parameters, $signature))
         {
             throw new InvalidResponseException('Invalid signature: ' . $signature);
         }

@@ -92,14 +92,14 @@ class PurchaseRequest extends AbstractRequest
         return $this->setParameter('payMethods', $value);
     }
 
-    public function generateSignature($encodedJson) 
+    public function generateSignature($encodedJson)
     {
         // decode the key
         $key = base64_decode($this->getSecretKey());
 
         $key = $this->encrypt_3DES($this->getMerchantOrder(), $key);
 
-        // MAC256 
+        // MAC256
         $res = hash_hmac('sha256', $encodedJson, $key, true); //(PHP 5 >= 5.1.2)
 
         // encode base64
@@ -136,7 +136,7 @@ class PurchaseRequest extends AbstractRequest
             'Ds_Merchant_AuthorisationCode' => $this->getAuthorisationCode(),
         );
 
-        if ($this->getPayMethods()) 
+        if ($this->getPayMethods())
         {
             $data['Ds_Merchant_PayMethods'] = $this->getPayMethods();
         }
@@ -166,10 +166,9 @@ class PurchaseRequest extends AbstractRequest
 
     protected function encrypt_3DES($message, $key)
     {
-        $bytes = array(0,0,0,0,0,0,0,0);
-        $iv = implode(array_map("chr", $bytes)); // PHP 4 >= 4.0.2
+        $l = ceil(strlen($message) / 8) * 8;
+        $ciphertext = substr(openssl_encrypt($message . str_repeat("\0", $l - strlen($message)), 'des-ede3-cbc', $key, OPENSSL_RAW_DATA, "\0\0\0\0\0\0\0\0"), 0, $l);
 
-        $ciphertext = mcrypt_encrypt(MCRYPT_3DES, $key, $message, MCRYPT_MODE_CBC, $iv); // PHP 4 >= 4.0.2
         return $ciphertext;
     }
 
