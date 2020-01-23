@@ -1,5 +1,5 @@
 {
-  "name": "neverbot/omnipay-redsys",
+  "name": "inresonance/omnipay-redsys",
   "type": "library",
   "description": "Redsys gateway for the Omnipay payment processing library",
   "keywords": [
@@ -10,7 +10,7 @@
     "pay",
     "payment"
   ],
-  "homepage": "https://github.com/neverbot/omnipay-redsys",
+  "homepage": "https://github.com/inresonance/omnipay-redsys",
   "license": "MIT",
   "authors": [
     {
@@ -22,7 +22,12 @@
       "name": "Ivan Alonso (neverbot)",
       "email": "ivan@billionlabs.com",
       "role": "Developer"
-    }    
+    },
+    {
+      "name": "Thomas Fleming",
+      "email": "thomas.fleming@communitybrands.com",
+      "role": "Lead Developer"
+    }
   ],
   "autoload": {
     "psr-4": { "Omnipay\\Redsys\\" : "src/" }
